@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/analyzedata.css">
+</head>
+
+<body>
+    <!-- View Data -->
+    <section>
+        <!--for demo wrap-->
+        <h1>Analysis Result of {{Datasetname}} file</h1>
+        <div class="gfg">
+            {{loaded_data | safe}}
+        </div>
+    </section>
+
+    <!-- End View Data -->
+    <div class="alignitems">
+        <div style="background-color:white;border: 1px solid black;">
+            <div style="width: 350px; background-color:black;padding: 5px">
+                <h4 style="color: white;text-align: center;">Table Specification</h4>
+            </div>
+            <p>Table Name : </p>
+            <p>Table </p>
+            <p>Total Rows : {{rowcount}}</p>
+            <p>Total Columns : {{columncount}}</p>
+            <p>Total duplicate columns : {{totalduplicaterow}}
+            </p>
+        </div>
+        <div>
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>Column Name</th>
+                            <th>values</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        {% for key, value in nullcolumns.items %}
+                        <tr>
+                            <td>{{value.Index}}</td>
+                            <td>{{value.Value}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>Column Names</th>
+                            <th>NaN count</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        {% for key, value in nanvalues.items %}
+                        <tr>
+                            <td>{{value.Index}}</td>
+                            <td>{{value.Value}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+    <div class="alignitems">
+        <div
+            style="background-color:white;border: 1px solid black;position:relative;top : 10px;width: 100%;padding: 10px;">
+            <div style="background-color:black;padding: 5px">
+                <h4 style="color: white;text-align: center;">Action List</h4>
+            </div>
+            <div>
+                <form action="/removecolumns/?Id={{Datasetname}}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Column names to be removed</label>
+                        <input type="text" class="form-control" name="fieldsnames" id="exampleInputPassword1" placeholder="Enter column name with comma seperated">
+                    </div>
+                    <!-- <div class="form-group form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Do you want changes in root dataset</label>
+                      </div> -->
+                    <input type="submit" value="Save Changes" class="btn btn-primary">
+                </form>
+            </div>
+            <div>
+                Remove duplicates : <a href="/removeduplicates" class="btn btn-primary">Remove duplicates</a>
+            </div>
+            <br>
+            <div>
+                Remove null values : <a href="/removenull" class="btn btn-primary">Remove null values</a>
+            </div>
+
+        </div>
+
+        <div class="graphform">
+            <!-- <div class="graphform"> -->
+            <form action="/graph/?Id={{Datasetname}}" method="post">
+                {% csrf_token %}
+                <h4 style="text-align: center;">Input index value</h4>
+                <div style="display:flex; justify-content : space-evenly;">
+                    <div>
+                        <select name="xaxis" id="">
+                            {% for opts in columns %}
+                            <option value="{{opts}}">{{opts}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <select name="yaxis" id="">
+                            {% for opts in columns %}
+                            <option value="{{opts}}">{{opts}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <input type="submit" value="View Graph" class="btn btn-outline-primary"
+                    style="align-items: center;position : relative; left : 43%;">
+            </form>
+            <!-- </div> -->
+        </div>
+
+    </div>
+    <!-- Scripts -->
+    <script>
+        $(window)
+            .on("load resize ", function () {
+                var scrollWidth =
+                    $(".tbl-content").width() - $(".tbl-content table").width();
+                $(".tbl-header").css({ "padding-right": scrollWidth });
+            })
+            .resize();
+    </script>
+    <!-- end script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

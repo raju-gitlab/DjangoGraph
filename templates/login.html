@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/loginl.css">
+</head>
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+          <h2 class="active"> Sign In </h2>
+            {% if token == 0 %}
+                <p>Password is incorrect</p>
+            {% endif %}
+
+            {% if token == -1 %}
+                <p>User is not available</p>
+            {% endif %}
+          <!-- Login Form -->
+          <form action="/login" method="post">
+            {% csrf_token %}
+            <input type="text" id="login" class="fadeIn second" name="username" placeholder="login">
+            <input type="text" id="password" class="fadeIn third" name="passkey" placeholder="password">
+            <input type="submit" class="fadeIn fourth" value="Log In">
+            <!-- <button type="sub"></button> -->
+          </form>
+      
+          <!-- Remind Passowrd -->
+          <div id="formFooter">
+            <a class="underlineHover" href="#">Forgot Password?</a>
+            <a class="underlineHover" href="/register">Register</a>
+          </div>
+      
+        </div>
+      </div>
+</body>
+</html>
